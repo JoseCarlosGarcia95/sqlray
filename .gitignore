@@ -12,3 +12,6 @@ pyvenv.cfg
 pip-selfcheck.json
 __pycache__
 *.pyc
+query.txt
+database_schema.json
+*.egg-info
