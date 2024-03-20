@@ -1,10 +1,12 @@
 from setuptools import setup, find_packages
+import os
 
-# Abre y lee los archivos necesarios
-with open("README.md", "r", encoding="utf-8") as fh:
+here = os.path.abspath(os.path.dirname(__file__))
+
+with open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = fh.read()
 
-with open("requirements.txt", "r", encoding="utf-8") as fh:
+with open(os.path.join(here, "requirements.txt"), encoding="utf-8") as fh:
     requirements = fh.read().splitlines()
 
 setup(
@@ -24,13 +26,12 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "sqlray"},
-    packages=find_packages(where="sqlray"), 
+    packages=find_packages(),  
     python_requires=">=3.6",
-    install_requires=requirements, 
+    install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "sqlray=app:cli",  
+            "sqlray=sqlray.app:cli",  
         ],
     },
     include_package_data=True,

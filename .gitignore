@@ -15,3 +15,4 @@ __pycache__
 query.txt
 database_schema.json
 *.egg-info
+dist/
