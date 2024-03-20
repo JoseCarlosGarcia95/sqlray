@@ -9,7 +9,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="sqlray",
-    version="0.1.0",
+    version="0.1.1",
     author="Jose Carlos Garcia Ortega",
     author_email="hola@josecarlos.me",
     description="SQLRay is a tool that helps you optimize SQL queries using OpenAI.",
