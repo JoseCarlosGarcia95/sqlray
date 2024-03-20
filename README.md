@@ -11,3 +11,21 @@ This CLI tool leverages the capabilities of SQLRay and OpenAI to analyze and opt
 ## Installation
 
 Before you can run the tool, ensure you have Python installed on your system. This tool has been tested with Python 3.8 and above.
+
+You can install directly from PyPI using pip:
+
+```bash
+sudo pip install sqlray
+```
+
+You can run directly sqlray from the command line:
+
+```bash
+sqlray --help
+```
+
+Or using python -m:
+
+```bash
+python -m sqlray --help
+```

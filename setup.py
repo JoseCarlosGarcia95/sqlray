@@ -11,15 +11,15 @@ with open(os.path.join(here, "requirements.txt"), encoding="utf-8") as fh:
 
 setup(
     name="sqlray",
-    version="0.1.1",
+    version="1.0.0",
     author="Jose Carlos Garcia Ortega",
     author_email="hola@josecarlos.me",
     description="SQLRay is a tool that helps you optimize SQL queries using OpenAI.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://tu-url-del-proyecto.com",
+    url="https://github.com/JoseCarlosGarcia95/sqlray",
     project_urls={
-        "Bug Tracker": "https://tu-url-del-proyecto.com/issues",
+        "Bug Tracker": "https://github.com/JoseCarlosGarcia95/sqlray/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
