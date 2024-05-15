@@ -8,6 +8,29 @@ This CLI tool leverages the capabilities of SQLRay and OpenAI to analyze and opt
 - **Interactive Mode:** Enter interactive mode to continuously optimize SQL queries with the ability to load a new schema as needed.
 - **OpenAI Integration:** Utilizes OpenAI's powerful models to suggest optimizations.
 
+## Getting Started with SQLRay (Docker)
+
+1. First of all, get the database schema and save a file database_schema.json with the schema. You can generate the schema directly from `Get database schema` section below.
+2. Run the following command to start the SQLRay container:
+```bash
+docker run -it --rm -v $(pwd)/:/tmp/local -w /tmp/local sqlray interactive
+```
+3. Once the container is running, you can start optimizing your SQL queries.
+
+### Example
+
+I have the schema in a file called database_schema.json on my current working directory.
+```bash
+❯ docker run -it --rm -v $(pwd)/:/tmp/local -w /tmp/local sqlray interactive
+Welcome to the interactive mode.
+Please enter the OpenAI model [gpt-4o]: 
+Please enter the OpenAI API key: sk-xxxx
+Please enter the path to your database schema JSON file: database_schema.json
+Database schema loaded successfully.
+If you enter a file path, the query will be read from the file.
+Please enter your SQL query (Type 'exit' to quit): SELECT * FROM users WHERE id = 1;
+```
+
 ## Get database schema
 
 To get the database schema, you can use the following command:
