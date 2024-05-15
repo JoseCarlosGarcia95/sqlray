@@ -21,7 +21,7 @@ docker run -it --rm -v $(pwd)/:/tmp/local -w /tmp/local ghcr.io/josecarlosgarcia
 
 I have the schema in a file called database_schema.json on my current working directory.
 ```bash
-❯ docker run -it --rm -v $(pwd)/:/tmp/local -w /tmp/local sqlray interactive
+❯ docker run -it --rm -v $(pwd)/:/tmp/local -w /tmp/local ghcr.io/josecarlosgarcia95/sqlray:main interactive
 Welcome to the interactive mode.
 Please enter the OpenAI model [gpt-4o]: 
 Please enter the OpenAI API key: sk-xxxx
