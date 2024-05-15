@@ -183,5 +183,5 @@ class SQLRay:
             optimized_response = optimized_response[7:-3]
         if "---" in optimized_response:
             optimized_response = optimized_response.split("---")[1]
-        
+
         return json.loads(optimized_response)
