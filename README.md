@@ -46,6 +46,11 @@ SELECT CONCAT( '{', '"columns": [', GROUP_CONCAT(DISTINCT columns_json SEPARATOR
 ', ''), '"', '}' ) FROM information_schema.views views WHERE views.table_schema = DATABASE() ) AS subqueries;
 ```
 
+### PostgreSQL
+```sql
+SELECT json_build_object( 'columns',( SELECT json_agg( json_build_object( 'schema', cols.table_schema, 'table', cols.table_name, 'name', cols.column_name, 'type', cols.data_type, 'nullable', (cols.is_nullable = 'YES'), 'collation', cols.collation_name) ) FROM information_schema.columns cols WHERE cols.table_schema = current_schema() ), 'indexes', ( SELECT json_agg( json_build_object( 'schema', ix.schemaname, 'table', ix.tablename, 'name', ix.indexname, 'definition', ix.indexdef ) ) FROM pg_indexes ix WHERE ix.schemaname = current_schema() ), 'tables', ( SELECT json_agg( json_build_object( 'schema', tbl.table_schema, 'table', tbl.table_name, 'type', tbl.table_type, 'rows', ( SELECT reltuples::bigint FROM pg_class WHERE oid = ('"' || tbl.table_schema || '"."' || tbl.table_name || '"')::regclass ), 'engine', 'N/A', 'collation', 'N/A' ) ) FROM information_schema.tables tbl WHERE tbl.table_schema = current_schema() ), 'views', ( SELECT json_agg( json_build_object( 'schema', v.table_schema, 'view_name', v.table_name, 'definition', pg_get_viewdef(('"' || v.table_schema || '"."' || v.table_name || '"')::regclass) ) ) FROM information_schema.views v WHERE v.table_schema = current_schema() ), 'server_name', '', 'version', version() ) AS info;
+```
+
 This command will return a JSON object with the database schema, please create a file with the output.
 
 ## Installation
