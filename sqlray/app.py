@@ -112,7 +112,7 @@ def interactive(schema_file):
     click.echo(click.style("Welcome to the interactive mode.", bold=True))
 
     # Select the model
-    model = click.prompt("Please enter the OpenAI model", default="gpt-4o")
+    model = click.prompt("Please enter the OpenAI model", default="gpt-4-turbo")
     api_key = os.getenv("OPENAI_API_KEY") or click.prompt(
         "Please enter the OpenAI API key"
     )
