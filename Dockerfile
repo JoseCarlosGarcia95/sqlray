@@ -4,6 +4,8 @@ FROM python:${PYTHON_VERSION} AS base
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y nano
+
 COPY requirements.txt .
 COPY setup.py .
 COPY sqlray/ ./sqlray

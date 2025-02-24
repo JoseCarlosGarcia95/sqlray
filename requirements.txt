@@ -1,2 +1,2 @@
-openai==1.14.2
+openai==1.64.0
 click==8.1.7

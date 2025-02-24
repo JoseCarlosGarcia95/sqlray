@@ -41,7 +41,7 @@ def cli():
 @click.option(
     "--model",
     "-m",
-    default="gpt-3.5-turbo",
+    default="o1-2024-12-17",
     help="OpenAI model to use for optimization.",
 )
 def optimize(schema_file, query, query_file, openai_key, model):
@@ -112,7 +112,7 @@ def interactive(schema_file):
     click.echo(click.style("Welcome to the interactive mode.", bold=True))
 
     # Select the model
-    model = click.prompt("Please enter the OpenAI model", default="gpt-4-turbo")
+    model = click.prompt("Please enter the OpenAI model", default="o1-2024-12-17")
     api_key = os.getenv("OPENAI_API_KEY") or click.prompt(
         "Please enter the OpenAI API key"
     )
@@ -134,58 +134,72 @@ def interactive(schema_file):
         click.echo(click.style("Database schema loaded successfully.", fg="green"))
     except Exception as e:
         click.echo(click.style(f"Failed to load database schema: {e}", fg="red"))
-        # Trying to load schema_file as JSON
-        try:
-            with open(schema_file, "r") as f:
-                database_schema = json.loads(f.read())
-            query_optimizer.load_database_schema(database_schema)
-            click.echo(click.style("Database schema loaded successfully.", fg="green"))
-        except Exception as e:
-            click.echo(click.style(f"Failed to load database schema: {e}", fg="red"))
-            return
         return  # Exit if schema loading fails
 
     # Enter the loop to accept queries
     while True:
-        click.echo(
-            click.style(
-                "If you enter a file path, the query will be read from the file.",
-                fg="yellow",
-            )
-        )
-        query = click.prompt("Please enter your SQL query (Type 'exit' to quit)")
-        if query.lower() == "exit":
-            break  # Exit the loop
+        click.echo("\n" + click.style("Interactive SQL Query Editor", bold=True, fg="yellow"))
+        click.echo(click.style("Type 'exit' to quit, or press Enter to open the editor.", fg="yellow"))
 
-        # If query is a file path, load the query from the file
-        if os.path.isfile(query):
+        # Preguntamos si el usuario quiere poner un fichero, salir o abrir el editor
+        user_input = click.prompt("File path or 'exit' or just press Enter to open editor", default="", show_default=False)
+
+        if user_input.strip().lower() == "exit":
+            break  # Salimos del modo interactivo
+
+        # Si el usuario ha introducido algo y es un path, tratamos de leerlo
+        if user_input and os.path.isfile(user_input):
             try:
-                with open(query, "r") as f:
+                with open(user_input, "r") as f:
                     query = f.read()
             except Exception as e:
-                click.echo(
-                    click.style(f"Failed to read query from file: {e}", fg="red")
-                )
-                continue  # Skip to the next iteration
-
-        # Optimize the query
-        try:
-            optimized_query = query_optimizer.optimize_query(query)
-            click.echo(
-                click.style(
-                    "Run this query for creating indices: ", fg="green", bold=True
-                )
+                click.echo(click.style(f"Failed to read query from file: {e}", fg="red"))
+                continue
+        elif user_input.strip():
+            # Si el usuario ha introducido texto que no es 'exit' ni un fichero, asumimos que es la query directa
+            query = user_input
+        else:
+            # Si no introdujo nada, abrimos el editor
+            initial_message = (
+                "-- Write or modify your SQL query here.\n"
+                "-- Lines starting with '--' are treated as comments.\n\n"
             )
-            for query in optimized_query["prepare_query"]:
-                click.echo(query)
+            edited_text = click.edit(initial_message)
+            if edited_text is None:
+                # Significa que el usuario salió del editor sin editar (posible cancelación)
+                continue
+            # Si no es None, lo tomamos como la consulta
+            query = edited_text.strip()
+            if not query:
+                continue
+
+        # Por si el usuario vuelve a escribir 'exit' dentro del editor
+        if query.lower() == "exit":
+            break
+
+        # Ahora optimizamos la consulta
+        try:
+            click.echo(click.style("Optimizing query...", fg="yellow"))
+            optimized_query = query_optimizer.optimize_query(query)
+
+            # Por convención en SQLRay, asumimos que 'optimized_query' puede ser un objeto con atributos
+            # prepare_query (lista), query (str) y explanation (str). Ajusta según tu caso:
+            click.echo(
+                click.style("Run this query for creating indices: ", fg="green", bold=True)
+            )
+            for idx_query in optimized_query.prepare_query:
+                click.echo(idx_query)
 
             click.echo(
                 click.style("This is the optimized query: ", fg="green", bold=True)
             )
-            click.echo(optimized_query["query"])
+            click.echo(optimized_query.query)
 
             click.echo(click.style("Explanation: ", fg="green", bold=True))
-            click.echo(optimized_query["explanation"])
+            click.echo(optimized_query.explanation)
+
+            click.echo(click.style("Score: ", fg="green", bold=True))
+            click.echo(optimized_query.optimization_score)
         except Exception as e:
             click.echo(click.style(f"Failed to optimize query: {e}", fg="red"))
 
