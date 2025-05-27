@@ -11,7 +11,7 @@ with open(os.path.join(here, "requirements.txt"), encoding="utf-8") as fh:
 
 setup(
     name="sqlray",
-    version="1.0.0",
+    version="1.0.1",
     author="Jose Carlos Garcia Ortega",
     author_email="hola@josecarlos.me",
     description="SQLRay is a tool that helps you optimize SQL queries using OpenAI.",
@@ -26,12 +26,12 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    packages=find_packages(),  
+    packages=find_packages(),
     python_requires=">=3.6",
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "sqlray=sqlray.app:cli",  
+            "sqlray=sqlray.app:cli",
         ],
     },
     include_package_data=True,

@@ -41,7 +41,7 @@ def cli():
 @click.option(
     "--model",
     "-m",
-    default="o1-2024-12-17",
+    default="o4-mini-2025-04-16",
     help="OpenAI model to use for optimization.",
 )
 def optimize(schema_file, query, query_file, openai_key, model):
@@ -112,7 +112,7 @@ def interactive(schema_file):
     click.echo(click.style("Welcome to the interactive mode.", bold=True))
 
     # Select the model
-    model = click.prompt("Please enter the OpenAI model", default="o1-2024-12-17")
+    model = click.prompt("Please enter the OpenAI model", default="o4-mini-2025-04-16")
     api_key = os.getenv("OPENAI_API_KEY") or click.prompt(
         "Please enter the OpenAI API key"
     )
@@ -138,11 +138,21 @@ def interactive(schema_file):
 
     # Enter the loop to accept queries
     while True:
-        click.echo("\n" + click.style("Interactive SQL Query Editor", bold=True, fg="yellow"))
-        click.echo(click.style("Type 'exit' to quit, or press Enter to open the editor.", fg="yellow"))
+        click.echo(
+            "\n" + click.style("Interactive SQL Query Editor", bold=True, fg="yellow")
+        )
+        click.echo(
+            click.style(
+                "Type 'exit' to quit, or press Enter to open the editor.", fg="yellow"
+            )
+        )
 
         # Preguntamos si el usuario quiere poner un fichero, salir o abrir el editor
-        user_input = click.prompt("File path or 'exit' or just press Enter to open editor", default="", show_default=False)
+        user_input = click.prompt(
+            "File path or 'exit' or just press Enter to open editor",
+            default="",
+            show_default=False,
+        )
 
         if user_input.strip().lower() == "exit":
             break  # Salimos del modo interactivo
@@ -153,7 +163,9 @@ def interactive(schema_file):
                 with open(user_input, "r") as f:
                     query = f.read()
             except Exception as e:
-                click.echo(click.style(f"Failed to read query from file: {e}", fg="red"))
+                click.echo(
+                    click.style(f"Failed to read query from file: {e}", fg="red")
+                )
                 continue
         elif user_input.strip():
             # Si el usuario ha introducido texto que no es 'exit' ni un fichero, asumimos que es la query directa
@@ -185,7 +197,9 @@ def interactive(schema_file):
             # Por convención en SQLRay, asumimos que 'optimized_query' puede ser un objeto con atributos
             # prepare_query (lista), query (str) y explanation (str). Ajusta según tu caso:
             click.echo(
-                click.style("Run this query for creating indices: ", fg="green", bold=True)
+                click.style(
+                    "Run this query for creating indices: ", fg="green", bold=True
+                )
             )
             for idx_query in optimized_query.prepare_query:
                 click.echo(idx_query)
